@@ -569,6 +569,16 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
         }
     }
 
+    private String extractErrorMessage(Exception e) {
+        Throwable cause = e.getCause();
+        if (cause != null) {
+            String message = cause.getMessage();
+            if (message != null) {
+                return message;
+            }
+        }
+        return e.getMessage();
+    }
     private class FlutterBluetoothSerialMethodCallHandler implements MethodCallHandler {
         /// Provides access to the plugin methods
         @Override
@@ -674,7 +684,7 @@ public class FlutterBluetoothSerialPlugin implements FlutterPlugin, ActivityAwar
                                 break;
                             } catch (Exception ex) {
                                 // Ignoring failure (since it isn't critical API for most applications)
-                                Log.d(TAG, "Obtaining address using reflection against internal Android code failed");
+                                Log.d(TAG, "Obtaining address using reflection against internal Android code failed " + extractErrorMessage(ex));
                                 //result.error("hidden_address", "obtaining address using reflection agains internal Android code failed", exceptionToString(ex));
                             }
 
